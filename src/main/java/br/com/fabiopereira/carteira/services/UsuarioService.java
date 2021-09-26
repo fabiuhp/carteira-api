@@ -2,27 +2,34 @@ package br.com.fabiopereira.carteira.services;
 
 import br.com.fabiopereira.carteira.models.Usuario;
 import br.com.fabiopereira.carteira.models.dtos.usuario.*;
+import br.com.fabiopereira.carteira.repositories.UsuarioRepository;
 import org.modelmapper.ModelMapper;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.*;
 import org.springframework.stereotype.Service;
 
-import java.util.*;
+import javax.transaction.Transactional;
+import java.util.Random;
 
 @Service
 public class UsuarioService {
 
+    @Autowired
+    private UsuarioRepository usuarioRepository;
     private ModelMapper modelMapper = new ModelMapper();
-    private List<Usuario> usuarios = new ArrayList<>();
 
-    public List<UsuarioDto> listar() {
-        return usuarios.stream()
-                .map(usuario -> modelMapper.map(usuario, UsuarioDto.class))
-                .toList();
+    public Page<UsuarioDto> listar(Pageable pageable) {
+        return usuarioRepository.findAll(pageable)
+                .map(usuario -> modelMapper.map(usuario, UsuarioDto.class));
     }
 
-    public void cadastrar (UsuarioForm usuarioForm) {
+    @Transactional
+    public UsuarioDto cadastrar (UsuarioForm usuarioForm) {
         Usuario usuario = modelMapper.map(usuarioForm, Usuario.class);
-
         usuario.setSenha(new Random().nextInt(999999) + "");
-        usuarios.add(usuario);
+
+        usuarioRepository.save(usuario);
+
+        return modelMapper.map(usuario, UsuarioDto.class);
     }
 }

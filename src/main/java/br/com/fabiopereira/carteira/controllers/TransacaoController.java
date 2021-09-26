@@ -1,27 +1,42 @@
 package br.com.fabiopereira.carteira.controllers;
 
-import br.com.fabiopereira.carteira.models.Transacao;
+import br.com.fabiopereira.carteira.models.dtos.relatorio.ItemCarteiraDto;
 import br.com.fabiopereira.carteira.models.dtos.transacao.*;
-import org.modelmapper.ModelMapper;
+import br.com.fabiopereira.carteira.services.TransacaoService;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.*;
+import org.springframework.data.web.PageableDefault;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.util.UriComponentsBuilder;
 
 import javax.validation.Valid;
-import java.util.*;
+import java.util.List;
 
 @RestController
 @RequestMapping("/transacoes")
 public class TransacaoController {
 
-    private ModelMapper modelMapper = new ModelMapper();
-    private List<Transacao> transacaoList = new ArrayList<>();
+    @Autowired
+    private TransacaoService transacaoService;
 
     @GetMapping
-    public List<TransacaoDto> listar() {
-        return transacaoList.stream().map(transacao -> modelMapper.map(transacao, TransacaoDto.class)).toList();
+    public Page<TransacaoDto> listar(@PageableDefault(size = 10) Pageable pageable) {
+        return transacaoService.listar(pageable);
     }
 
     @PostMapping
-    public void cadastrar(@RequestBody @Valid TransacaoForm transacaoForm) {
-        transacaoList.add(modelMapper.map(transacaoForm, Transacao.class));
+    public ResponseEntity<TransacaoDto> cadastrar(@RequestBody @Valid TransacaoForm transacaoForm, UriComponentsBuilder uriComponentsBuilder) {
+        TransacaoDto transacaoDto = transacaoService.cadastrar(transacaoForm);
+        return ResponseEntity
+                .created(uriComponentsBuilder
+                        .path("/transacoes/{id}").buildAndExpand(transacaoDto.getId())
+                        .toUri())
+                .body(transacaoDto);
+    }
+
+    @GetMapping("/relatorios/carteira")
+    public List<ItemCarteiraDto> relatorioPosicoesPorcentagem() {
+        return transacaoService.relatorioPosicoesPorcentagem();
     }
 }
