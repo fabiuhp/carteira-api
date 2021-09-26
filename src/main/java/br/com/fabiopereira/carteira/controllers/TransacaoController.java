@@ -4,6 +4,7 @@ import br.com.fabiopereira.carteira.models.dtos.transacao.*;
 import br.com.fabiopereira.carteira.services.TransacaoService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.*;
+import org.springframework.data.web.PageableDefault;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
@@ -16,7 +17,7 @@ public class TransacaoController {
     private TransacaoService transacaoService;
 
     @GetMapping
-    public Page<TransacaoDto> listar(Pageable pageable) {
+    public Page<TransacaoDto> listar(@PageableDefault(size = 10) Pageable pageable) {
         return transacaoService.listar(pageable);
     }
 
