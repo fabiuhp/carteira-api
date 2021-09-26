@@ -1,15 +1,12 @@
 package br.com.fabiopereira.carteira.controllers;
 
-import br.com.fabiopereira.carteira.models.*;
-import br.com.fabiopereira.carteira.models.dtos.transacao.*;
 import br.com.fabiopereira.carteira.models.dtos.usuario.*;
 import br.com.fabiopereira.carteira.services.UsuarioService;
-import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.*;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
-import java.util.*;
 
 @RestController
 @RequestMapping("/usuarios")
@@ -19,8 +16,8 @@ public class UsuarioController {
     private UsuarioService usuarioService;
 
     @GetMapping
-    public List<UsuarioDto> listar() {
-        return usuarioService.listar();
+    public Page<UsuarioDto> listar(Pageable pageable) {
+        return usuarioService.listar(pageable);
     }
 
     @PostMapping

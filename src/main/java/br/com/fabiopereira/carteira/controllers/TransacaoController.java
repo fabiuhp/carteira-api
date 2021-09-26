@@ -1,14 +1,12 @@
 package br.com.fabiopereira.carteira.controllers;
 
-import br.com.fabiopereira.carteira.models.Transacao;
 import br.com.fabiopereira.carteira.models.dtos.transacao.*;
 import br.com.fabiopereira.carteira.services.TransacaoService;
-import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.*;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
-import java.util.*;
 
 @RestController
 @RequestMapping("/transacoes")
@@ -18,8 +16,8 @@ public class TransacaoController {
     private TransacaoService transacaoService;
 
     @GetMapping
-    public List<TransacaoDto> listar() {
-        return transacaoService.listar();
+    public Page<TransacaoDto> listar(Pageable pageable) {
+        return transacaoService.listar(pageable);
     }
 
     @PostMapping

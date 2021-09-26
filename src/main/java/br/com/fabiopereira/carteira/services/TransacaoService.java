@@ -5,9 +5,10 @@ import br.com.fabiopereira.carteira.models.dtos.transacao.*;
 import br.com.fabiopereira.carteira.repositories.TransacaoRepository;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.*;
 import org.springframework.stereotype.Service;
 
-import java.util.List;
+import javax.transaction.Transactional;
 
 @Service
 public class TransacaoService {
@@ -16,14 +17,15 @@ public class TransacaoService {
     private TransacaoRepository transacaoRepository;
     private ModelMapper modelMapper = new ModelMapper();
 
-    public List<TransacaoDto> listar() {
-        return transacaoRepository.findAll()
-                .stream()
-                .map(transacao -> modelMapper.map(transacao, TransacaoDto.class))
-                .toList();
+    public Page<TransacaoDto> listar(Pageable pageable) {
+        return transacaoRepository.findAll(pageable)
+                .map(transacao -> modelMapper.map(transacao, TransacaoDto.class));
     }
 
+    @Transactional
     public void cadastrar (TransacaoForm transacaoForm) {
-        transacaoRepository.save(modelMapper.map(transacaoForm, Transacao.class));
+        Transacao transacao = modelMapper.map(transacaoForm, Transacao.class);
+        transacao.setId(null);
+        transacaoRepository.save(transacao);
     }
 }

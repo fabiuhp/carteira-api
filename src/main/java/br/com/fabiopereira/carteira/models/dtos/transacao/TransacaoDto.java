@@ -9,6 +9,7 @@ import java.math.BigDecimal;
 @Setter
 public class TransacaoDto {
 
+    private Long id;
     private String ticker;
     private BigDecimal preco;
     private int quantidade;
