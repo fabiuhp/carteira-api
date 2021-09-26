@@ -24,10 +24,12 @@ public class UsuarioService {
     }
 
     @Transactional
-    public void cadastrar (UsuarioForm usuarioForm) {
+    public UsuarioDto cadastrar (UsuarioForm usuarioForm) {
         Usuario usuario = modelMapper.map(usuarioForm, Usuario.class);
-
         usuario.setSenha(new Random().nextInt(999999) + "");
+
         usuarioRepository.save(usuario);
+
+        return modelMapper.map(usuario, UsuarioDto.class);
     }
 }

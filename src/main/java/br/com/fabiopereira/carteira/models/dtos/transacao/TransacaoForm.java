@@ -14,6 +14,7 @@ public class TransacaoForm {
     @NotNull
     @NotEmpty
     @Size(min = 5, max = 6)
+    @Pattern(regexp = "[a-zA-z]{4}[0-9][0-9]?")
     String ticker;
 
     @NotNull

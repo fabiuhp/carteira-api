@@ -5,7 +5,9 @@ import br.com.fabiopereira.carteira.services.UsuarioService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.*;
 import org.springframework.data.web.PageableDefault;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.util.UriComponentsBuilder;
 
 import javax.validation.Valid;
 
@@ -22,7 +24,14 @@ public class UsuarioController {
     }
 
     @PostMapping
-    public void cadastrar(@RequestBody @Valid UsuarioForm usuarioForm) {
-        usuarioService.cadastrar(usuarioForm);
+    public ResponseEntity<UsuarioDto> cadastrar(@RequestBody @Valid UsuarioForm usuarioForm,
+                                                UriComponentsBuilder uriComponentsBuilder) {
+        UsuarioDto usuarioDto = usuarioService.cadastrar(usuarioForm);
+
+        return ResponseEntity.created(uriComponentsBuilder
+                        .path("/usuarios/{id}")
+                        .buildAndExpand(usuarioDto.getId())
+                        .toUri())
+                .body(usuarioDto);
     }
 }
