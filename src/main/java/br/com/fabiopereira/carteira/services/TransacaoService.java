@@ -1,24 +1,29 @@
 package br.com.fabiopereira.carteira.services;
 
-import br.com.fabiopereira.carteira.models.*;
+import br.com.fabiopereira.carteira.models.Transacao;
 import br.com.fabiopereira.carteira.models.dtos.transacao.*;
-import br.com.fabiopereira.carteira.models.dtos.usuario.*;
+import br.com.fabiopereira.carteira.repositories.TransacaoRepository;
 import org.modelmapper.ModelMapper;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.util.*;
+import java.util.List;
 
 @Service
 public class TransacaoService {
 
+    @Autowired
+    private TransacaoRepository transacaoRepository;
     private ModelMapper modelMapper = new ModelMapper();
-    private List<Transacao> transacaoList = new ArrayList<>();
 
     public List<TransacaoDto> listar() {
-        return transacaoList.stream().map(transacao -> modelMapper.map(transacao, TransacaoDto.class)).toList();
+        return transacaoRepository.findAll()
+                .stream()
+                .map(transacao -> modelMapper.map(transacao, TransacaoDto.class))
+                .toList();
     }
 
     public void cadastrar (TransacaoForm transacaoForm) {
-        transacaoList.add(modelMapper.map(transacaoForm, Transacao.class));
+        transacaoRepository.save(modelMapper.map(transacaoForm, Transacao.class));
     }
 }

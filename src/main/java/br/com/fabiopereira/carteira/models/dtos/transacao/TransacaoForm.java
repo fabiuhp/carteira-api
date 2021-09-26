@@ -1,6 +1,7 @@
 package br.com.fabiopereira.carteira.models.dtos.transacao;
 
 import br.com.fabiopereira.carteira.models.TipoTransacao;
+import com.fasterxml.jackson.annotation.JsonAlias;
 import lombok.Value;
 
 import javax.validation.constraints.*;
@@ -26,4 +27,8 @@ public class TransacaoForm {
 
     @NotNull
     TipoTransacao tipo;
+
+    @NotNull
+    @JsonAlias("usuario_id")
+    Long usuarioId;
 }
