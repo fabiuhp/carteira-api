@@ -27,12 +27,12 @@ public class TransacaoService {
     @Transactional
     public TransacaoDto cadastrar (TransacaoForm transacaoForm) {
         Transacao transacao = modelMapper.map(transacaoForm, Transacao.class);
+
         transacao.setId(null);
         transacaoRepository.save(transacao);
 
         return modelMapper.map(transacao, TransacaoDto.class);
     }
-
 
     public List<ItemCarteiraDto> relatorioPosicoesPorcentagem() {
         return transacaoRepository.relatorioPosicoesPorcentagem();

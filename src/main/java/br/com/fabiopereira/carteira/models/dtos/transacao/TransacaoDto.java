@@ -14,5 +14,5 @@ public class TransacaoDto {
     private BigDecimal preco;
     private Integer quantidade;
     private TipoTransacao tipo;
-    private String usuarioNome;
+    private Long usuarioId;
 }

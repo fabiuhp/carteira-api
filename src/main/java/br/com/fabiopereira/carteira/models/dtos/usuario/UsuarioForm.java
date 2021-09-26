@@ -2,13 +2,13 @@ package br.com.fabiopereira.carteira.models.dtos.usuario;
 
 import lombok.Value;
 
-import javax.validation.constraints.*;
+import javax.validation.constraints.NotBlank;
 
 @Value
 public class UsuarioForm {
 
-    @NotBlank
+    @NotBlank(message = "{campo.not.blank}")
     String nome;
-    @NotBlank
+    @NotBlank(message = "{campo.not.blank}")
     String login;
 }
